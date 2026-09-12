@@ -21,5 +21,5 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "android-template-compose"
+rootProject.name = "libreria-compose"
 include(":app")
