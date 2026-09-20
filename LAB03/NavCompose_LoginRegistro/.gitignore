@@ -1,6 +1,5 @@
-.gradle/
+.kotlin/
 gradle/
-build/
 gradlew
 gradlew.bat
 
