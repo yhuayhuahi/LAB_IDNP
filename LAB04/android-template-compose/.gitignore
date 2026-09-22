@@ -1,0 +1,6 @@
+.gradle/
+.kotlin/
+.android/
+build/
+
+
