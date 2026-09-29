@@ -1,103 +1,42 @@
-# Android Template Compose + Material 3
+# Campus Navigator Compose
 
-Plantilla moderna, ligera y de máxima compatibilidad para Android con **Kotlin**, **Jetpack Compose** y **Material Design 3 (Material You)**.
+Aplicación Android para el Laboratorio 5 de IDNP, desarrollada con Kotlin, Jetpack Compose, Material 3 y Navigation Compose.
 
-Diseñada para servir como base limpia y lista para producción al iniciar proyectos en Android (API 34 / Android 14) con soporte de arquitectura moderna, cliente HTTP/HTTPS y librerías esenciales bien balanceadas.
+## Funcionalidad
 
----
+- Cuatro destinos en una barra inferior: Inicio, Edificios, Mapa y Perfil.
+- Lista de cuatro edificios con acción para seleccionar uno.
+- La pantalla Inicio muestra el último edificio seleccionado.
+- Mapa y Perfil incluyen pantallas de marcador de posición.
+- API 34 como `compileSdk` y `targetSdk`; `minSdk` 24.
 
-## Características Incluidas
+## ViewModel compartido
 
-- **Jetpack Compose + Material Design 3**:
-  - `MaterialTheme` preconfigurado con soporte para Modo Oscuro y Colores Dinámicos (Android 12+).
-  - Componentes Material 3: `Scaffold`, `CenterAlignedTopAppBar`, `ElevatedCard`, `Button`, `Text`.
-  - Compose BOM (`2024.09.02`) para sincronización garantizada de versiones de Compose.
-- **Arquitectura y Ciclo de Vida**:
-  - `lifecycle-viewmodel-compose` y `lifecycle-runtime-compose` para manejo reactivo con `collectAsStateWithLifecycle()`.
-- **Navegación**:
-  - `navigation-compose` con soporte para Type-Safe Navigation (rutas seguras con Kotlinx Serialization).
-- **Red y Cliente HTTP/HTTPS**:
-  - `Retrofit 2` + `OkHttp 3` + `logging-interceptor`: El estándar más robusto, compatible y probado en Android.
-  - `kotlinx.serialization` + conversor Retrofit oficial: Serialización JSON moderna, sin reflexión en tiempo de ejecución y súper ligera.
-  - Permiso `android.permission.INTERNET` configurado en el Manifest.
-- **Carga de Imágenes**:
-  - `Coil Compose`: Creada nativamente para Compose, basada en corrutinas y OkHttp, ligera y sin el overhead de librerías antiguas.
+`MainScreen` obtiene una instancia de `SeleccionViewModel` mediante `viewModel()` y la entrega tanto a Inicio como a Edificios. Al pulsar “Ver”, Edificios actualiza `edificioSeleccionado`, una propiedad `mutableStateOf`; Compose observa el estado y actualiza la interfaz. Al volver a Inicio se muestra el mismo valor, sin una lambda de comunicación entre esas pantallas.
 
----
+Una lambda resulta apropiada para comunicar un evento puntual y mantener el estado en el padre. Un ViewModel compartido es conveniente cuando varias pantallas necesitan leer o actualizar el mismo estado de pantalla y se quiere conservarlo durante cambios de configuración. No es una regla que el ViewModel sea siempre mejor: para flujos pequeños, elevar el estado y pasar lambdas suele ser más simple. Para sobrevivir a la terminación del proceso se necesita guardar el estado, por ejemplo con `SavedStateHandle` o almacenamiento persistente.
 
-## Compatibilidad y Versiones Exactas
+## Compilar y ejecutar
 
-Siguiendo las recomendaciones LTS de máxima compatibilidad sin advertencias ni conflictos de herramientas:
+El proyecto se compila desde VS Code con Gradle Wrapper; no requiere Android Studio. Necesitas JDK 17 o superior, Android SDK con la plataforma 34 y Build Tools 34.0.0, y un emulador o dispositivo para instalar la app.
 
-| Herramienta / Librería | Versión |
-| :--- | :--- |
-| **Target SDK / Compile SDK** | API 34 (Android 14) |
-| **Min SDK** | API 24 (Android 7.0 - cubre >96% de dispositivos) |
-| **Android Gradle Plugin (AGP)** | 8.5.2 |
-| **Gradle** | 8.7 |
-| **Kotlin** | 2.0.21 (con plugin oficial de Compose compiler) |
-| **JDK** | Java 17 |
-| **Compose BOM** | 2024.09.02 |
-| **Retrofit / OkHttp** | 2.11.0 / 4.12.0 |
-| **Coil Compose** | 2.7.0 |
+### Configuración única de Java en Windows
 
----
+No hace falta instalar Android Studio. En las variables de entorno de Windows, configura una sola vez `JAVA_HOME` de usuario con la carpeta real de un JDK 17 o superior y agrega `%JAVA_HOME%\bin` al `Path` de usuario. Si ya existe un `JAVA_HOME` de sistema que apunta a una ruta inválida, corrígelo o elimínalo. Cierra todas las ventanas de VS Code y vuelve a abrirlo para que sus terminales carguen el cambio. Comprueba el JDK que Gradle usará con `.\gradlew.bat --version`; debe mostrar JVM 17 o superior.
 
-## Estructura del Proyecto
+El SDK se resuelve mediante `local.properties`, así que no necesitas exportar sus rutas en cada comando. En este workspace ese archivo apunta a `C:/Android/Sdk` y está excluido de Git. Si clonas el proyecto en otro equipo, crea o actualiza `local.properties` una sola vez con la ruta local de su SDK.
 
-```text
-android-template-compose-material/
-├── app/
-│   ├── build.gradle.kts                  # Configuración de SDK, plugins y dependencias
-│   └── src/
-│       ├── main/
-│       │   ├── AndroidManifest.xml       # Declaración de componentes y permisos (INTERNET)
-│       │   └── kotlin/com/example/app/
-│       │       ├── MainActivity.kt       # Activity principal con interfaz Material 3
-│       │       └── ui/
-│       │           └── theme/            # Sistema de diseño Material 3
-│       │               ├── Color.kt      # Paletas de color Light / Dark
-│       │               ├── Theme.kt      # AppTheme con Dynamic Color
-│       │               └── Type.kt       # Tipografías base
-│       └── ...
-├── gradle/wrapper/
-│   └── gradle-wrapper.properties         # Configuración Gradle 8.7
-├── build.gradle.kts                      # Build script raíz
-├── settings.gradle.kts                   # Repositorios y resolución de plugins
-├── gradlew                               # Wrapper para Linux/macOS
-└── gradlew.bat                           # Wrapper para Windows
+Desde la carpeta raíz del proyecto, compila e instala con PowerShell:
+
+```powershell
+.\gradlew.bat assembleDebug
+.\gradlew.bat installDebug
 ```
 
----
+`installDebug` requiere un emulador iniciado o un dispositivo conectado con depuración USB. Comprueba la conexión con `adb devices`. El APK se genera en `app/build/outputs/apk/debug/app-debug.apk`.
 
-## Inicializar y Compilar
+La app puede ejecutarse en Android API 24 o superior; para esta configuración de compilación se usa `compileSdk 34`.
 
-Da permisos de ejecución al wrapper:
+## Evidencia para el informe
 
-```bash
-chmod +x ./gradlew
-```
-
-Compila la variante de debug:
-
-```bash
-./gradlew assembleDebug --no-daemon
-```
-
-El APK resultante se generará en:
-
-```text
-app/build/outputs/apk/debug/app-debug.apk
-```
-
-### Instalar y Ejecutar en un dispositivo/emulador:
-
-```bash
-./gradlew installDebug --no-daemon
-```
-
-Comprobar dispositivos conectados:
-
-```bash
-adb devices
-```
+Prueba las cuatro pestañas y selecciona un edificio antes de volver a Inicio. Incluye en el informe capturas de cada pestaña y una captura adicional que muestre el edificio reflejado en Inicio, junto con una breve descripción de la instancia compartida del ViewModel. Las capturas deben obtenerse al ejecutar la app en el emulador o dispositivo usado para la práctica.
