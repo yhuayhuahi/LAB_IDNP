@@ -1,9 +1,11 @@
 package com.example.tarjetascampus_compose.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,11 +29,17 @@ fun TarjetaLugar(
 	nombre: String,
 	descripcion: String,
 	imagen: Painter,
-	colorFondo: Color
+	colorFondo: Color,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit = {}
 ) {
 	Surface(
 		shape = RoundedCornerShape(24.dp),
-		color = colorFondo
+		color = colorFondo,
+		modifier = modifier
+			.fillMaxWidth()
+			.clip(RoundedCornerShape(24.dp))
+			.clickable { onClick() }
 	) {
 		Row(
 			verticalAlignment = Alignment.CenterVertically,
@@ -47,7 +55,7 @@ fun TarjetaLugar(
 			)
 
 			Spacer(modifier = Modifier.width(16.dp))
-			
+
 			Column {
 				Text(
 					text = nombre,
@@ -59,6 +67,6 @@ fun TarjetaLugar(
 					fontSize = 14.sp
 				)
 			}
-		}		
+		}
 	}
 }

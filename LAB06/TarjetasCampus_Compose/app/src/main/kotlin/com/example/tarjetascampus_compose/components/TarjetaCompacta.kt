@@ -2,6 +2,7 @@ package com.example.tarjetascampus_compose.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,13 +23,16 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TarjetaCompacta(
 	nombre: String,
-	imagen: Painter
+	imagen: Painter,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit = {}
 ) {
 	Box(
-		modifier = Modifier
-		.fillMaxWidth()
-		.height(140.dp)
-		.clip(RoundedCornerShape(16.dp))
+		modifier = modifier
+			.fillMaxWidth()
+			.height(140.dp)
+			.clip(RoundedCornerShape(16.dp))
+			.clickable { onClick() }
 	) {
 		Image(
 			painter = imagen,
