@@ -1,103 +1,68 @@
-# Android Template Compose + Material 3
+# Laboratorio 06: Tarjetas y Navegación en Campus Navigator (Compose)
 
-Plantilla moderna, ligera y de máxima compatibilidad para Android con **Kotlin**, **Jetpack Compose** y **Material Design 3 (Material You)**.
-
-Diseñada para servir como base limpia y lista para producción al iniciar proyectos en Android (API 34 / Android 14) con soporte de arquitectura moderna, cliente HTTP/HTTPS y librerías esenciales bien balanceadas.
+Aplicación desarrollada en Android con **Kotlin**, **Jetpack Compose** y **Material Design 3**, que integra diseño avanzado de tarjetas personalizadas con el flujo de navegación del campus universitario (LAB05).
 
 ---
 
-## Características Incluidas
+## Cambios Implementados desde la Versión Base
 
-- **Jetpack Compose + Material Design 3**:
-  - `MaterialTheme` preconfigurado con soporte para Modo Oscuro y Colores Dinámicos (Android 12+).
-  - Componentes Material 3: `Scaffold`, `CenterAlignedTopAppBar`, `ElevatedCard`, `Button`, `Text`.
-  - Compose BOM (`2024.09.02`) para sincronización garantizada de versiones de Compose.
-- **Arquitectura y Ciclo de Vida**:
-  - `lifecycle-viewmodel-compose` y `lifecycle-runtime-compose` para manejo reactivo con `collectAsStateWithLifecycle()`.
-- **Navegación**:
-  - `navigation-compose` con soporte para Type-Safe Navigation (rutas seguras con Kotlinx Serialization).
-- **Red y Cliente HTTP/HTTPS**:
-  - `Retrofit 2` + `OkHttp 3` + `logging-interceptor`: El estándar más robusto, compatible y probado en Android.
-  - `kotlinx.serialization` + conversor Retrofit oficial: Serialización JSON moderna, sin reflexión en tiempo de ejecución y súper ligera.
-  - Permiso `android.permission.INTERNET` configurado en el Manifest.
-- **Carga de Imágenes**:
-  - `Coil Compose`: Creada nativamente para Compose, basada en corrutinas y OkHttp, ligera y sin el overhead de librerías antiguas.
+A partir de la versión base inicial del laboratorio, se realizaron las siguientes mejoras:
 
----
+1. **Integración de Navegación y Arquitectura Modular (LAB05 + LAB06):**
+   - Se conectó la estructura de navegación con `Scaffold`, `CenterAlignedTopAppBar`, `NavigationBar` y `NavHost`.
+   - El código se organizó de forma modular en paquetes: `model`, `components`, `screens`, `navigation` y `viewmodel`.
 
-## Compatibilidad y Versiones Exactas
+2. **Interactividad en las Tarjetas:**
+   - Se envolvieron los componentes `TarjetaLugar` y `TarjetaCompacta` con `Modifier.clickable { ... }` para permitir la selección y navegación al detalle.
 
-Siguiendo las recomendaciones LTS de máxima compatibilidad sin advertencias ni conflictos de herramientas:
+3. **Nueva Pantalla de Detalle (`DetalleLugarScreen`):**
+   - Composable que muestra la información completa del edificio (imagen destacada ampliada, categoría, descripción detallada, ubicación y horario), reutilizando y expandiendo la estética de `TarjetaLugar`.
 
-| Herramienta / Librería | Versión |
-| :--- | :--- |
-| **Target SDK / Compile SDK** | API 34 (Android 14) |
-| **Min SDK** | API 24 (Android 7.0 - cubre >96% de dispositivos) |
-| **Android Gradle Plugin (AGP)** | 8.5.2 |
-| **Gradle** | 8.7 |
-| **Kotlin** | 2.0.21 (con plugin oficial de Compose compiler) |
-| **JDK** | Java 17 |
-| **Compose BOM** | 2024.09.02 |
-| **Retrofit / OkHttp** | 2.11.0 / 4.12.0 |
-| **Coil Compose** | 2.7.0 |
+4. **Listado Completo en `EdificiosScreen`:**
+   - Se reemplazó la lista simple de texto y botones por un `LazyColumn` que presenta los diferentes estilos de tarjetas con datos de 4 edificios del campus (Biblioteca Central, Comedor Universitario, Pabellón de Informática y Auditorio Principal).
+
+5. **Tercer Estilo de Tarjeta Propio (`TarjetaInformativa` - Reto Opcional):**
+   - Diseño personalizado que combina:
+     - `Card` y `Surface` con bordes redondeados y sombra tonal.
+     - `Box` para apilar la imagen con un filtro translúcido y una insignia (badge) flotante.
+     - `Column` y `Row` para organizar la descripción y metadatos inferiores (horario y enlace a detalle).
+
+6. **Iconos Vectoriales de Material Design:**
+   - Se reemplazaron todos los emojis de la interfaz por iconos vectoriales oficiales de Material Design (`ic_home`, `ic_apartment`, `ic_map`, `ic_person`, `ic_place`, `ic_schedule`, `ic_arrow_back`, `ic_arrow_forward`).
 
 ---
 
-## Estructura del Proyecto
+## Estructura del Código
 
 ```text
-android-template-compose-material/
-├── app/
-│   ├── build.gradle.kts                  # Configuración de SDK, plugins y dependencias
-│   └── src/
-│       ├── main/
-│       │   ├── AndroidManifest.xml       # Declaración de componentes y permisos (INTERNET)
-│       │   └── kotlin/com/example/app/
-│       │       ├── MainActivity.kt       # Activity principal con interfaz Material 3
-│       │       └── ui/
-│       │           └── theme/            # Sistema de diseño Material 3
-│       │               ├── Color.kt      # Paletas de color Light / Dark
-│       │               ├── Theme.kt      # AppTheme con Dynamic Color
-│       │               └── Type.kt       # Tipografías base
-│       └── ...
-├── gradle/wrapper/
-│   └── gradle-wrapper.properties         # Configuración Gradle 8.7
-├── build.gradle.kts                      # Build script raíz
-├── settings.gradle.kts                   # Repositorios y resolución de plugins
-├── gradlew                               # Wrapper para Linux/macOS
-└── gradlew.bat                           # Wrapper para Windows
+com.example.tarjetascampus_compose/
+├── MainActivity.kt          # Punto de entrada con Scaffold y rutas de navegación
+├── model/
+│   └── LugarCampus.kt       # Datos y catálogo de edificios del campus
+├── components/
+│   ├── TarjetaLugar.kt      # Estilo 1: Imagen circular + textos en fila
+│   ├── TarjetaCompacta.kt   # Estilo 2: Imagen de fondo panorámica con scrim
+│   ├── TarjetaInformativa.kt# Estilo 3: Badge flotante + metadatos (Reto)
+│   └── ListaTarjetasLugar.kt# Lista modular de tarjetas
+├── screens/
+│   ├── DetalleLugarScreen.kt# Detalle a pantalla completa
+│   ├── EdificiosScreen.kt   # Listado interactivo con tarjetas
+│   ├── HomeScreen.kt        # Pantalla de bienvenida con último edificio visto
+│   └── PlaceholderScreen.kt # Pantallas para Mapa y Perfil
+├── navigation/
+│   └── Screen.kt            # Definición de rutas y destinos
+└── viewmodel/
+    └── SeleccionViewModel.kt# Estado reactivo del edificio consultado
 ```
 
 ---
 
-## Inicializar y Compilar
-
-Da permisos de ejecución al wrapper:
+## Compilación y Ejecución
 
 ```bash
-chmod +x ./gradlew
-```
+# Compilar la aplicación
+./gradlew assembleDebug
 
-Compila la variante de debug:
-
-```bash
-./gradlew assembleDebug --no-daemon
-```
-
-El APK resultante se generará en:
-
-```text
-app/build/outputs/apk/debug/app-debug.apk
-```
-
-### Instalar y Ejecutar en un dispositivo/emulador:
-
-```bash
-./gradlew installDebug --no-daemon
-```
-
-Comprobar dispositivos conectados:
-
-```bash
-adb devices
+# Instalar en dispositivo o emulador conectado
+./gradlew installDebug
 ```
