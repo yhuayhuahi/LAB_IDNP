@@ -1,0 +1,34 @@
+[
+  {
+    "id": "sala-1",
+    "xRatio": 0.265,
+    "yRatio": 0.26,
+    "radio": 0.055,
+    "titulo": "Sala 1",
+    "descripcion": "Laboratorio de cómputo 1. Equipado para prácticas de programación."
+  },
+  {
+    "id": "sala-2",
+    "xRatio": 0.735,
+    "yRatio": 0.26,
+    "radio": 0.055,
+    "titulo": "Sala 2",
+    "descripcion": "Laboratorio de cómputo 2. Espacio para clases y trabajo colaborativo."
+  },
+  {
+    "id": "sala-3",
+    "xRatio": 0.265,
+    "yRatio": 0.74,
+    "radio": 0.055,
+    "titulo": "Sala 3",
+    "descripcion": "Sala de proyectos. Área destinada al desarrollo de trabajos académicos."
+  },
+  {
+    "id": "sala-4",
+    "xRatio": 0.735,
+    "yRatio": 0.74,
+    "radio": 0.055,
+    "titulo": "Sala 4",
+    "descripcion": "Sala de estudio. Ambiente para lectura y trabajo individual."
+  }
+]
